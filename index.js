@@ -19,8 +19,6 @@ const corsOptions = {
     }
 }
 
-app.use(cors(corsOptions))
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
     extended: true
@@ -59,7 +57,7 @@ sendTransaction = async (params) => {
 app.get('/', (req, res) => {
     res.send('Dispenser API works!')
 })
-app.post('/dispense', async (req, res, next) => {
+app.post('/dispense', cors(corsOptions), async (req, res, next) => {
     console.log(req.hostname)
     let token = req.body.token
     let address = req.body.wallet
