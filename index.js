@@ -8,7 +8,10 @@ const app = express()
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-const whitelist = ['https://constellationlabs.io']
+const whitelist = [
+    'http://constellationlabs.io', 'https://constellationlabs.io',,
+    'http://orion.constellationlabs.io', 'https://orion.constellationlabs.io',
+    'http://anand-crowdbotics-188.herokuapp.com', 'https://anand-crowdbotics-188.herokuapp.com']
 const corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1) {
@@ -57,7 +60,7 @@ sendTransaction = async (params) => {
 app.get('/', (req, res) => {
     res.send('Dispenser API works!')
 })
-app.post('/dispense', cors(corsOptions), async (req, res, next) => {
+app.post('/dispense', async (req, res, next) => {
     console.log(req.hostname)
     let token = req.body.token
     let address = req.body.wallet
