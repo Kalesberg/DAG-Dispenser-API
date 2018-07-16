@@ -96,4 +96,5 @@ app.post('/dispense', async (req, res, next) => {
     return next()
 })
 
-app.listen(3000, () => console.log('Token Dispenser API - listening on port 3000'))
+const PORT = process.env.PORT
+app.listen(PORT, () => console.log(`Token Dispenser API - listening on port ${PORT}`))
