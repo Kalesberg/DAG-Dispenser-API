@@ -89,11 +89,11 @@ app.post('/dispense', async (req, res, next) => {
     }
 
     let txHash
-    try {
+    // try {
         txHash = await sendTransaction(params)
-    } catch(err) {
-        return next('Problems during sending tokens')
-    }
+    // } catch(err) {
+    //     return next('Problems during sending tokens')
+    // }
 
     res.json(txHash)
     return next()
