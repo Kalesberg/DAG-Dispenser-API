@@ -17,7 +17,7 @@ const CONFIG = {
     DECIMALS: 8,
     ABI: abi,
     SECRET: process.env.SECRET || 'HLj3b89blMa-PkT2SKmyJA',
-    PORT: 3000
+    PORT: process.env.PORT || 3000
 }
 
 module.exports = CONFIG
