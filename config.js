@@ -7,7 +7,7 @@ const CONFIG = {
     CHAIN_ID: process.env.CHAIN_ID || 1337,
     DECIMALS: 8,
     ABI: abi,
-    SECRET: 'secret'
+    SECRET: process.env.SECRET || 'secret'
 }
 
 module.exports = CONFIG
