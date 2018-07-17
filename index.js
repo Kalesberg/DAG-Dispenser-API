@@ -58,8 +58,7 @@ sendTransaction = async (params) => {
     return web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
 }
 app.get('/', (req, res) => {
-    res.send(config)
-    // res.send('Dispenser API works!')
+    res.send('Dispenser API works!')
 })
 app.post('/dispense', async (req, res, next) => {
     let token = req.body.token
