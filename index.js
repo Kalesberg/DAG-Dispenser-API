@@ -62,7 +62,6 @@ app.get('/', (req, res) => {
     // res.send('Dispenser API works!')
 })
 app.post('/dispense', async (req, res, next) => {
-    console.log(req.hostname)
     let token = req.body.token
     let address = req.body.wallet
     let amount = req.body.amount
@@ -100,5 +99,4 @@ app.post('/dispense', async (req, res, next) => {
     return next()
 })
 
-const PORT = process.env.PORT
-app.listen(PORT, () => console.log(`Token Dispenser API - listening on port ${PORT}`))
+app.listen(config.PORT, () => console.log(`Token Dispenser API - listening on port ${config.PORT}`))
