@@ -95,11 +95,11 @@ app.post('/dispense', async (req, res, next) => {
     let tx = await createTransaction(params)
     // res.json({hash: '0x' + tx.hash().toString('hex')})
     let txHash
-    try {
+    // try {
         txHash = await sendTransaction(tx)
-    } catch(err) {
-        return next('Problem during transaction')
-    }
+    // } catch(err) {
+        // return next('Problem during transaction')
+    // }
     res.json(txHash)
     return next()
 })
