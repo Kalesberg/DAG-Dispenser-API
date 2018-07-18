@@ -50,12 +50,15 @@ sendTransaction = async (params) => {
         data: (params.data || '')
     };
 
-    let tx = new Tx(txParams)
-    let privateKey = new Buffer.from(params.key, 'hex')
-    tx.sign(privateKey)
-    let serializedTx = tx.serialize()
+    return web3.eth.sendTransaction(txParams)
+    // console.log(txHash)
 
-    return web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+    // let tx = new Tx(txParams)
+    // let privateKey = new Buffer.from(params.key, 'hex')
+    // tx.sign(privateKey)
+    // let serializedTx = tx.serialize()
+    
+    // return web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
 }
 app.get('/', (req, res) => {
     res.send('Dispenser API works!')
