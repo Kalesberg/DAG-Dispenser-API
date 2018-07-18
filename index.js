@@ -36,6 +36,7 @@ createTransaction = async (params) => {
     let chainId = parseInt(config.CHAIN_ID)
     let nonce = await web3.eth.getTransactionCount(params.account)
     let gasPrice = await web3.eth.getGasPrice()
+    gasPrice = parseInt(gasPrice * 1.1)
 
     let eth = params.eth || '0'
 
@@ -94,6 +95,7 @@ app.post('/dispense', async (req, res, next) => {
 
     let tx = await createTransaction(params)
     // res.json({hash: '0x' + tx.hash().toString('hex')})
+    // console.log(tx.hash())
     let txHash
     // try {
         txHash = await sendTransaction(tx)
