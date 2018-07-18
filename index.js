@@ -53,9 +53,8 @@ createTransaction = async (params) => {
     let tx = new Tx(txParams)
     return tx
 }
-sendTransaction = async (params) => {
-    let tx = await createTransaction(params)
-    let privateKey = new Buffer.from(params.key, 'hex')
+sendTransaction = async (tx) => {
+    let privateKey = new Buffer.from(config.WALLETKEY, 'hex')
     tx.sign(privateKey)
     let serializedTx = tx.serialize()
     
@@ -84,16 +83,24 @@ app.post('/dispense', async (req, res, next) => {
     if (decoded.exp * 1000 < (new Date).valueOf()) {
         return next('Token expired')
     }
+
+    // contract.methods.transfer(address, amount_bn).send({from: config.WALLETADDRESS})
+    // .on('transactionHash', hash => console.log(hash))
     
     let params = {
         account: config.WALLETADDRESS,
-        key: config.WALLETKEY,
         data: contract.methods.transfer(address, amount_bn).encodeABI()
     }
 
     let tx = await createTransaction(params)
-    res.json({hash: '0x' + tx.hash().toString('hex')})
-    await sendTransaction(params)
+    // res.json({hash: '0x' + tx.hash().toString('hex')})
+    let txHash
+    try {
+        txHash = await sendTransaction(tx)
+    } catch(err) {
+        return next('Problem during transaction')
+    }
+    res.json(txHash)
     return next()
 })
 
