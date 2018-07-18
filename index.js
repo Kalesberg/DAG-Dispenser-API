@@ -100,11 +100,12 @@ app.post('/dispense', async (req, res, next) => {
 
     contract.methods.transfer(address, amount_bn).send({from: config.WALLETADDRESS})
     .on('transactionHash', function(hash) {
-        console.log(hash)
+        res.json({hash: hash})
+        return next()
     })
-
-    // res.json(txHash)
-    // return next()
+    .on('error', function() {
+        return next('Error occurred')
+    })
 })
 
 app.listen(config.PORT, () => console.log(`Token Dispenser API - listening on port ${config.PORT}`))
