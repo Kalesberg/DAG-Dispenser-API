@@ -50,6 +50,7 @@ sendTransaction = async (params) => {
         data: (params.data || '')
     };
 
+    console.log(web3.eth.sendTransaction(txParams))
     return web3.eth.sendTransaction(txParams)
     // console.log(txHash)
 
@@ -90,15 +91,20 @@ app.post('/dispense', async (req, res, next) => {
         data: contract.methods.transfer(address, amount_bn).encodeABI()
     }
 
-    let txHash
+    // let txHash
     // try {
-        txHash = await sendTransaction(params)
+        // txHash = await sendTransaction(params)
     // } catch(err) {
     //     return next('Problems during sending tokens')
     // }
 
-    res.json(txHash)
-    return next()
+    contract.methods.transfer(address, amount_bn).send({from: config.WALLETADDRESS})
+    .on('transactionHash', function(hash) {
+        console.log(hash)
+    })
+
+    // res.json(txHash)
+    // return next()
 })
 
 app.listen(config.PORT, () => console.log(`Token Dispenser API - listening on port ${config.PORT}`))
