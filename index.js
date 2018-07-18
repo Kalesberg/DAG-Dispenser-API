@@ -32,7 +32,7 @@ const config = require('./config')
 const web3 = new Web3(config.HTTP_PROVIDER)
 const contract = new web3.eth.Contract(config.ABI, config.CONTRACTADDRESS)
 
-sendTransaction = async (params) => {
+createTransaction = async (params) => {
     let chainId = parseInt(config.CHAIN_ID)
     let nonce = await web3.eth.getTransactionCount(params.account)
     let gasPrice = await web3.eth.getGasPrice()
@@ -50,16 +50,16 @@ sendTransaction = async (params) => {
         data: (params.data || '')
     };
 
-    console.log(web3.eth.sendTransaction(txParams))
-    return web3.eth.sendTransaction(txParams)
-    // console.log(txHash)
-
-    // let tx = new Tx(txParams)
-    // let privateKey = new Buffer.from(params.key, 'hex')
-    // tx.sign(privateKey)
-    // let serializedTx = tx.serialize()
+    let tx = new Tx(txParams)
+    return tx
+}
+sendTransaction = async (params) => {
+    let tx = await createTransaction(params)
+    let privateKey = new Buffer.from(params.key, 'hex')
+    tx.sign(privateKey)
+    let serializedTx = tx.serialize()
     
-    // return web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+    return web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
 }
 app.get('/', (req, res) => {
     res.send('Dispenser API works!')
@@ -91,21 +91,10 @@ app.post('/dispense', async (req, res, next) => {
         data: contract.methods.transfer(address, amount_bn).encodeABI()
     }
 
-    // let txHash
-    // try {
-        // txHash = await sendTransaction(params)
-    // } catch(err) {
-    //     return next('Problems during sending tokens')
-    // }
-
-    contract.methods.transfer(address, amount_bn).send({from: config.WALLETADDRESS})
-    .on('transactionHash', function(hash) {
-        res.json({hash: hash})
-        return next()
-    })
-    .on('error', function() {
-        return next('Error occurred')
-    })
+    let tx = await createTransaction(params)
+    res.json({hash: '0x' + tx.hash().toString('hex')})
+    await sendTransaction(params)
+    return next()
 })
 
 app.listen(config.PORT, () => console.log(`Token Dispenser API - listening on port ${config.PORT}`))
